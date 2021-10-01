@@ -1,16 +1,6 @@
-import {
-  Flex,
-  Container,
-  Heading,
-  Image,
-  SimpleGrid,
-  Text,
-  Button,
-  Box,
-  Divider,
-} from "@chakra-ui/react";
+import { Container, Heading, SimpleGrid, Text, Flex } from "@chakra-ui/layout";
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
 import axios from "axios";
 import Web3Modal from "web3modal";
 
@@ -18,29 +8,34 @@ import { nftaddress, nftmarketaddress } from "../.config";
 
 import NFT from "../artifacts/contracts/NTF.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
+import { Image } from "@chakra-ui/image";
+import { Button } from "@chakra-ui/button";
 
-export default function Home() {
+const MyNft = () => {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
 
   useEffect(() => {
-    loadNfts();
+    loadNFTs();
   }, []);
+  async function loadNFTs() {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
 
-  const loadNfts = async () => {
-    const provider = new ethers.providers.JsonRpcProvider();
-    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
     const marketContract = new ethers.Contract(
       nftmarketaddress,
       Market.abi,
-      provider
+      signer
     );
-    const data = await marketContract.fetchMarketItems();
+    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
+    const data = await marketContract.fetchMyNFTs();
 
     const items = await Promise.all(
       data.map(async (i) => {
-        const tokenURI = await tokenContract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenURI);
+        const tokenUri = await tokenContract.tokenURI(i.tokenId);
+        const meta = await axios.get(tokenUri);
         let price = ethers.utils.formatUnits(i.price.toString(), "ether");
         let item = {
           price,
@@ -48,48 +43,27 @@ export default function Home() {
           seller: i.seller,
           owner: i.owner,
           image: meta.data.image,
-          name: meta.data.name,
-          description: meta.data.description,
         };
         return item;
       })
     );
     setNfts(items);
     setLoadingState("loaded");
-  };
-
-  const buyNft = async (nft) => {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
-
-    const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
-
-    const transaction = await contract.createMarketSale(
-      nftaddress,
-      nft.tokenId,
-      {
-        value: price,
-      }
-    );
-    await transaction.wait();
-    loadNfts();
-  };
-
+  }
   if (loadingState === "loaded" && !nfts.length)
     return (
       <Container justifyContent="center" px={[5, 6]} maxW="container.xl" py={4}>
-        <Heading> No Items in marketplace</Heading>
+        <Heading as="h3">No assets owned</Heading>
       </Container>
     );
-
   return (
     <Container justifyContent="center" px={[5, 6]} maxW="container.xl" py={4}>
+      <Heading mb={8} as="h3">
+        My Nft
+      </Heading>
       <SimpleGrid columns={[1, 4]} spacing={10}>
         {nfts.map((nft, i) => {
+          console.log(nft);
           console.log(nft.name);
           return (
             <Flex
@@ -133,17 +107,6 @@ export default function Home() {
                 <Text fontSize="2xl" mb={4} fontWeight="bold" color="white">
                   {nft.price} Matic
                 </Text>
-                <Button
-                  w="full"
-                  bg="pink.500"
-                  color="white"
-                  fontWeight="bold"
-                  py={2}
-                  px={12}
-                  onClick={() => buyNft(nft)}
-                >
-                  Buy
-                </Button>
               </Flex>
             </Flex>
           );
@@ -151,4 +114,6 @@ export default function Home() {
       </SimpleGrid>
     </Container>
   );
-}
+};
+
+export default MyNft;

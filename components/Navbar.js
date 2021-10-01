@@ -38,12 +38,12 @@ const Navbar = ({ handleClick }) => {
       href: "/",
     },
     {
-      name: "Sell NFT",
-      href: "/create-item",
+      name: "Create NFT",
+      href: "/create-nft",
     },
     {
       name: "My NFT",
-      href: "/my-assets",
+      href: "/my-nft",
     },
     {
       name: "Dashboard",

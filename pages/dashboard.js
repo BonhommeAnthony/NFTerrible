@@ -1,93 +1,67 @@
-import {
-  Flex,
-  Container,
-  Heading,
-  Image,
-  SimpleGrid,
-  Text,
-  Button,
-  Box,
-  Divider,
-} from "@chakra-ui/react";
+import { Container, Flex, Heading, SimpleGrid, Text } from "@chakra-ui/layout";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Web3Modal from "web3modal";
-
 import { nftaddress, nftmarketaddress } from "../.config";
 
 import NFT from "../artifacts/contracts/NTF.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
+import { Image } from "@chakra-ui/image";
 
-export default function Home() {
+const dashboard = () => {
   const [nfts, setNfts] = useState([]);
+  const [sold, setSold] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
-
   useEffect(() => {
-    loadNfts();
+    loadNFTs();
   }, []);
+  async function loadNFTs() {
+    const web3Modal = new Web3Modal({
+      network: "mainnet",
+      cacheProvider: true,
+    });
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
 
-  const loadNfts = async () => {
-    const provider = new ethers.providers.JsonRpcProvider();
-    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
     const marketContract = new ethers.Contract(
       nftmarketaddress,
       Market.abi,
-      provider
+      signer
     );
-    const data = await marketContract.fetchMarketItems();
+    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
+    const data = await marketContract.fetchItemsCreated();
 
     const items = await Promise.all(
       data.map(async (i) => {
-        const tokenURI = await tokenContract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenURI);
+        const tokenUri = await tokenContract.tokenURI(i.tokenId);
+        const meta = await axios.get(tokenUri);
         let price = ethers.utils.formatUnits(i.price.toString(), "ether");
         let item = {
           price,
           tokenId: i.tokenId.toNumber(),
           seller: i.seller,
           owner: i.owner,
+          sold: i.sold,
           image: meta.data.image,
-          name: meta.data.name,
-          description: meta.data.description,
         };
         return item;
       })
     );
+    /* create a filtered array of items that have been sold */
+    const soldItems = items.filter((i) => i.sold);
+    setSold(soldItems);
     setNfts(items);
     setLoadingState("loaded");
-  };
-
-  const buyNft = async (nft) => {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
-
-    const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
-
-    const transaction = await contract.createMarketSale(
-      nftaddress,
-      nft.tokenId,
-      {
-        value: price,
-      }
-    );
-    await transaction.wait();
-    loadNfts();
-  };
-
+  }
   if (loadingState === "loaded" && !nfts.length)
-    return (
-      <Container justifyContent="center" px={[5, 6]} maxW="container.xl" py={4}>
-        <Heading> No Items in marketplace</Heading>
-      </Container>
-    );
-
+    return <h1 className="py-10 px-20 text-3xl">No assets created</h1>;
   return (
     <Container justifyContent="center" px={[5, 6]} maxW="container.xl" py={4}>
+      <Heading mb={8} as="h3">
+        NFT created
+      </Heading>
       <SimpleGrid columns={[1, 4]} spacing={10}>
         {nfts.map((nft, i) => {
           console.log(nft.name);
@@ -133,17 +107,57 @@ export default function Home() {
                 <Text fontSize="2xl" mb={4} fontWeight="bold" color="white">
                   {nft.price} Matic
                 </Text>
-                <Button
-                  w="full"
-                  bg="pink.500"
-                  color="white"
-                  fontWeight="bold"
-                  py={2}
-                  px={12}
-                  onClick={() => buyNft(nft)}
+              </Flex>
+            </Flex>
+          );
+        })}
+      </SimpleGrid>
+      <Heading my={8}>Nft You sold </Heading>
+      <SimpleGrid columns={[1, 4]} spacing={10}>
+        {sold.map((nft, i) => {
+          console.log(nft.name);
+          return (
+            <Flex
+              key={i}
+              bg="white"
+              backdropBlur="blur(64px)"
+              // overflow="hidden"
+              direction="column"
+              fontSize="13px"
+              borderRadius="lg"
+              boxShadow="xl"
+              key={i}
+              color="white"
+            >
+              <Flex className="item-zoom" direction="column">
+                <Image
+                  overflow="hidden"
+                  objectFit="cover"
+                  h="200px"
+                  borderTopRadius="lg"
+                  src={nft.image}
+                />
+              </Flex>
+
+              <Flex p={4} direction="column">
+                <Text
+                  fontWeight="semibold"
+                  fontSize="2xl"
+                  h="64px"
+                  color="black"
                 >
-                  Buy
-                </Button>
+                  {nft.name}
+                </Text>
+                <Flex h="70px" overflow="hidden" direction="column">
+                  <Text fontSize="sm" h="64px" color="gray.400">
+                    {nft.description}
+                  </Text>
+                </Flex>
+              </Flex>
+              <Flex direction="column" p={4} bg="black">
+                <Text fontSize="2xl" mb={4} fontWeight="bold" color="white">
+                  {nft.price} Matic
+                </Text>
               </Flex>
             </Flex>
           );
@@ -151,4 +165,6 @@ export default function Home() {
       </SimpleGrid>
     </Container>
   );
-}
+};
+
+export default dashboard;
