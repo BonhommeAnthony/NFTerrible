@@ -86,12 +86,15 @@ const Layout = ({ children }) => {
             borderRadius="md"
             p="8px 16px"
             backgroundColor="black"
+            fontWeight="bold"
+            color="white"
           >
             Deployed by ▲ Vercel
           </Flex>
         </Link>
         <Link href="https://chakra-ui.com/">
           <Flex
+            color="white"
             cursor="pointer"
             mt={4}
             fontWeight="bold"

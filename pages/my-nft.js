@@ -61,7 +61,7 @@ const MyNft = () => {
       <Heading mb={8} as="h3">
         My Nft
       </Heading>
-      <SimpleGrid columns={[1, 4]} spacing={10}>
+      <SimpleGrid columns={[1, 3]} spacing={10}>
         {nfts.map((nft, i) => {
           console.log(nft);
           console.log(nft.name);
@@ -82,28 +82,13 @@ const MyNft = () => {
                 <Image
                   overflow="hidden"
                   objectFit="cover"
-                  h="200px"
+                  h="400px"
                   borderTopRadius="lg"
                   src={nft.image}
                 />
               </Flex>
 
-              <Flex p={4} direction="column">
-                <Text
-                  fontWeight="semibold"
-                  fontSize="2xl"
-                  h="64px"
-                  color="black"
-                >
-                  {nft.name}
-                </Text>
-                <Flex h="70px" overflow="hidden" direction="column">
-                  <Text fontSize="sm" h="64px" color="gray.400">
-                    {nft.description}
-                  </Text>
-                </Flex>
-              </Flex>
-              <Flex direction="column" p={4} bg="black">
+              <Flex borderBottomRadius="lg" direction="column" p={4} bg="black">
                 <Text fontSize="2xl" mb={4} fontWeight="bold" color="white">
                   {nft.price} Matic
                 </Text>

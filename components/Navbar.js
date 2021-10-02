@@ -54,7 +54,7 @@ const Navbar = ({ handleClick }) => {
   return (
     <Flex
       zIndex="5"
-      bgColor={navBackground == true ? "whiteAlpha.900" : ""}
+      bgColor={navBackground == true ? "blackAlpha.900" : ""}
       w="100%"
       pos="fixed"
       top="0"
@@ -63,7 +63,8 @@ const Navbar = ({ handleClick }) => {
       align="center"
       height={16}
       px={6}
-      borderBottom="1px"
+      // borderBottom="1px"
+      boxShadow="lg"
     >
       <Flex
         m="auto"
@@ -93,9 +94,9 @@ const Navbar = ({ handleClick }) => {
 
         <Menu autoSelect={false}>
           <MenuButton display={["flex", "flex", "none", "none"]}>
-            <IconButton colorScheme="blue" icon={<FiMenu />} />
+            <IconButton colorScheme="pink" icon={<FiMenu />} />
           </MenuButton>
-          <MenuList color="blue.500" w="100%" backgroundColor="whiteAlpha.900">
+          <MenuList color="white" w="100%" backgroundColor="black">
             {NavItem.map((item, i) => (
               <MenuItem key={i}>
                 <Link href={item.href}>

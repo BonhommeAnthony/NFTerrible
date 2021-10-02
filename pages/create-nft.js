@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { nftaddress, nftmarketaddress } from "../.config";
 import NFT from "../artifacts/contracts/NTF.sol/NFT.json";
@@ -16,9 +16,9 @@ import {
   Image,
   Container,
   Heading,
-  Stack,
-  FormControl,
-  FormLabel,
+  VStack,
+  Progress,
+  Box,
 } from "@chakra-ui/react";
 
 const createItemPage = () => {
@@ -30,15 +30,19 @@ const createItemPage = () => {
     name: "",
     description: "",
   });
+  const [fileSize, setFileSize] = useState(null);
+  const [fileprogress, setFileprogress] = useState(null);
 
   async function onChange(e) {
     const file = e.target.files[0];
     try {
+      setFileSize(file.size);
       const added = await client.add(file, {
-        progress: (prog) => console.log(`received: ${prog}`),
+        progress: (prog) => setFileprogress(prog),
       });
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       setFileUrl(url);
+      setFileSize(null);
     } catch (error) {
       console.log("Error uploading file: ", error);
     }
@@ -89,13 +93,14 @@ const createItemPage = () => {
     await transaction.wait();
     router.push("/");
   }
-  console.log(formInput);
+
   return (
     <Container justifyContent="center" px={[5, 6]} maxW="container.xl" py={4}>
-      <Heading mb={8} as="h3">
-        Create Nft
-      </Heading>
-      <Stack color="black" spacing={6} m="auto" maxW="600px">
+      <VStack color="black" m="auto" spacing={6} maxW="600px">
+        <Heading color="black" mb={8} as="h3">
+          Create Nft
+        </Heading>
+
         <Input
           bgColor="white"
           placeholder="Asset Name"
@@ -121,6 +126,16 @@ const createItemPage = () => {
           }
         />
         <Input border="none" type="file" name="Asset" onChange={onChange} />
+        {fileSize && (
+          <Box w="100%">
+            <Progress
+              colorScheme="pink"
+              hasStripe
+              w="full"
+              value={(fileprogress / fileSize) * 100}
+            />
+          </Box>
+        )}
         {fileUrl && <Image rounded mt={4} width="350" src={fileUrl} />}
         <Button
           onClick={createMarket}
@@ -133,7 +148,7 @@ const createItemPage = () => {
         >
           Create Digital Asset
         </Button>
-      </Stack>
+      </VStack>
     </Container>
   );
 };

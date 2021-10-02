@@ -56,15 +56,19 @@ const dashboard = () => {
     setLoadingState("loaded");
   }
   if (loadingState === "loaded" && !nfts.length)
-    return <h1 className="py-10 px-20 text-3xl">No assets created</h1>;
+    return (
+      <Container justifyContent="center" px={[5, 6]} maxW="container.xl" py={4}>
+        <Heading as="h3">No assets Created</Heading>
+      </Container>
+    );
   return (
     <Container justifyContent="center" px={[5, 6]} maxW="container.xl" py={4}>
       <Heading mb={8} as="h3">
         NFT created
       </Heading>
-      <SimpleGrid columns={[1, 4]} spacing={10}>
+      <SimpleGrid columns={[1, 3]} spacing={10}>
         {nfts.map((nft, i) => {
-          console.log(nft.name);
+          console.log(nft);
           return (
             <Flex
               key={i}
@@ -82,28 +86,13 @@ const dashboard = () => {
                 <Image
                   overflow="hidden"
                   objectFit="cover"
-                  h="200px"
+                  h="400px"
                   borderTopRadius="lg"
                   src={nft.image}
                 />
               </Flex>
 
-              <Flex p={4} direction="column">
-                <Text
-                  fontWeight="semibold"
-                  fontSize="2xl"
-                  h="64px"
-                  color="black"
-                >
-                  {nft.name}
-                </Text>
-                <Flex h="70px" overflow="hidden" direction="column">
-                  <Text fontSize="sm" h="64px" color="gray.400">
-                    {nft.description}
-                  </Text>
-                </Flex>
-              </Flex>
-              <Flex direction="column" p={4} bg="black">
+              <Flex borderBottomRadius="lg" direction="column" p={4} bg="black">
                 <Text fontSize="2xl" mb={4} fontWeight="bold" color="white">
                   {nft.price} Matic
                 </Text>
@@ -113,9 +102,8 @@ const dashboard = () => {
         })}
       </SimpleGrid>
       <Heading my={8}>Nft You sold </Heading>
-      <SimpleGrid columns={[1, 4]} spacing={10}>
+      <SimpleGrid columns={[1, 3]} spacing={10}>
         {sold.map((nft, i) => {
-          console.log(nft.name);
           return (
             <Flex
               key={i}
@@ -133,28 +121,13 @@ const dashboard = () => {
                 <Image
                   overflow="hidden"
                   objectFit="cover"
-                  h="200px"
+                  h="400px"
                   borderTopRadius="lg"
                   src={nft.image}
                 />
               </Flex>
 
-              <Flex p={4} direction="column">
-                <Text
-                  fontWeight="semibold"
-                  fontSize="2xl"
-                  h="64px"
-                  color="black"
-                >
-                  {nft.name}
-                </Text>
-                <Flex h="70px" overflow="hidden" direction="column">
-                  <Text fontSize="sm" h="64px" color="gray.400">
-                    {nft.description}
-                  </Text>
-                </Flex>
-              </Flex>
-              <Flex direction="column" p={4} bg="black">
+              <Flex borderBottomRadius="lg" direction="column" p={4} bg="black">
                 <Text fontSize="2xl" mb={4} fontWeight="bold" color="white">
                   {nft.price} Matic
                 </Text>
