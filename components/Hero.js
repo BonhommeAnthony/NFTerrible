@@ -11,7 +11,12 @@ const Hero = () => {
   };
   return (
     <>
-      <VStack mb="80px" alignItems="flex-start" spacing={[12, 14]}>
+      <VStack
+        mb="80px"
+        textAlign={["center", "left"]}
+        alignItems="flex-start"
+        spacing={[12, 14]}
+      >
         <Heading
           w={["100%", "60%"]}
           color="white"

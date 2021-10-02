@@ -6,7 +6,7 @@ import {
   SimpleGrid,
   Text,
   Button,
-  VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
@@ -20,6 +20,7 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 import Hero from "../components/Hero";
 
 export default function Home() {
+  const toast = useToast();
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
 
@@ -28,7 +29,9 @@ export default function Home() {
   }, []);
 
   const loadNfts = async () => {
-    const provider = new ethers.providers.JsonRpcProvider();
+    const provider = new ethers.providers.JsonRpcProvider(
+      "https://rpc-mainnet.matic.network"
+    );
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
     const marketContract = new ethers.Contract(
       nftmarketaddress,
@@ -77,6 +80,12 @@ export default function Home() {
     );
     await transaction.wait();
     loadNfts();
+    toast({
+      title: "Congratulation you bought this NFT.",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+    });
   };
 
   return (

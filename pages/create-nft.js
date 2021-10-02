@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ethers } from "ethers";
 import { nftaddress, nftmarketaddress } from "../.config";
 import NFT from "../artifacts/contracts/NTF.sol/NFT.json";
@@ -19,11 +19,12 @@ import {
   VStack,
   Progress,
   Box,
+  useToast,
 } from "@chakra-ui/react";
 
 const createItemPage = () => {
   const router = useRouter();
-
+  const toast = useToast();
   const [fileUrl, setFileUrl] = useState(null);
   const [formInput, setFormInput] = useState({
     price: "",
@@ -91,6 +92,12 @@ const createItemPage = () => {
       value: listingPrice,
     });
     await transaction.wait();
+    toast({
+      title: "NFT created.",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+    });
     router.push("/");
   }
 
