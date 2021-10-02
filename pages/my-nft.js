@@ -75,7 +75,6 @@ const MyNft = () => {
               fontSize="13px"
               borderRadius="lg"
               boxShadow="xl"
-              key={i}
               color="white"
             >
               <Flex className="item-zoom" direction="column">

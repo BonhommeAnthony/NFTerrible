@@ -111,7 +111,6 @@ export default function Home() {
                 fontSize="13px"
                 borderRadius="lg"
                 boxShadow="xl"
-                key={i}
                 color="white"
                 textAlign="center"
               >

@@ -71,7 +71,6 @@ const Dashboard = () => {
           console.log(nft);
           return (
             <Flex
-              key={i}
               bg="white"
               backdropBlur="blur(64px)"
               // overflow="hidden"
@@ -114,7 +113,6 @@ const Dashboard = () => {
               fontSize="13px"
               borderRadius="lg"
               boxShadow="xl"
-              key={i}
               color="white"
             >
               <Flex className="item-zoom" direction="column">
