@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "hardhat": "npx hardhat compile",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
