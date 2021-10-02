@@ -22,7 +22,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-const createItemPage = () => {
+const CreateItemPage = () => {
   const router = useRouter();
   const toast = useToast();
   const [fileUrl, setFileUrl] = useState(null);
@@ -160,4 +160,4 @@ const createItemPage = () => {
   );
 };
 
-export default createItemPage;
+export default CreateItemPage;

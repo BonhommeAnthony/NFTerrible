@@ -9,7 +9,7 @@ import NFT from "../artifacts/contracts/NTF.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 import { Image } from "@chakra-ui/image";
 
-const dashboard = () => {
+const Dashboard = () => {
   const [nfts, setNfts] = useState([]);
   const [sold, setSold] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
@@ -140,4 +140,4 @@ const dashboard = () => {
   );
 };
 
-export default dashboard;
+export default Dashboard;
