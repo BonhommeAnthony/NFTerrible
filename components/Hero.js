@@ -50,7 +50,7 @@ const Hero = () => {
 
           <Button
             onClick={() =>
-              router.push("https://github.com/BonhommeAnthony/kickstartchain")
+              router.push("https://github.com/BonhommeAnthony/NFTerrible")
             }
             borderRadius="lg"
             boxShadow="xl"
