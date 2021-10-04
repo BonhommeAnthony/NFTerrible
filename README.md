@@ -1,15 +1,9 @@
-# Basic Sample Hardhat Project
+# NFT MarketPlace
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+NFT marketPlace deployed on the Polygon Mumbai Testnet
 
-Try running some of the following tasks:
+You can create and sell Nft.
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
-```
+Front end with next Js and chakra Ui deployed on Vercel.
+
+I created my smart contract with solidity.
