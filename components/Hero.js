@@ -58,7 +58,7 @@ const Hero = () => {
             colorScheme="pink"
             leftIcon={<FiGithub />}
           >
-            Github repo
+            Github repository
           </Button>
         </Stack>
       </VStack>
