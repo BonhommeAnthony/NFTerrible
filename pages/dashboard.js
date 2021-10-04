@@ -68,7 +68,6 @@ const Dashboard = () => {
       </Heading>
       <SimpleGrid columns={[1, 3]} spacing={10}>
         {nfts.map((nft, i) => {
-          console.log(nft);
           return (
             <Flex
               bg="white"

@@ -63,8 +63,6 @@ const MyNft = () => {
       </Heading>
       <SimpleGrid columns={[1, 3]} spacing={10}>
         {nfts.map((nft, i) => {
-          console.log(nft);
-          console.log(nft.name);
           return (
             <Flex
               key={i}
